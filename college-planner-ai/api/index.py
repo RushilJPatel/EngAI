@@ -1,23 +1,31 @@
-from flask import Flask, render_template, request, jsonify
+"""
+Vercel Python Serverless Function for College Planner AI
+This file needs to be in the api/ directory for Vercel to recognize it
+"""
 import json
 import os
 import sys
 
-# Add parent directory to path to import planner module
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add parent directory to path so we can import planner
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, parent_dir)
+
+from flask import Flask, render_template, request, jsonify
 from planner import suggest_next_courses, suggest_ai_electives, get_course_info, generate_semester_schedule, get_career_paths, analyze_workload, get_ai_schedule_guidance
 
-app = Flask(__name__, template_folder='../templates', static_folder='../static')
-
+# Create Flask app with correct paths
+app = Flask(__name__, 
+           template_folder=os.path.join(parent_dir, 'templates'),
+           static_folder=os.path.join(parent_dir, 'static'))
 
 def load_colleges():
     """Load college data from college_curriculums.json"""
-    json_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'college_curriculums.json')
+    json_path = os.path.join(parent_dir, 'college_curriculums.json')
     with open(json_path, 'r') as f:
         return json.load(f)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     """Render the main page with college dropdown"""
     colleges_data = load_colleges()
@@ -149,11 +157,6 @@ def course_info(course_name):
         return jsonify({'error': str(e)}), 500
 
 
-# For Vercel serverless function
-def handler(request):
-    """Vercel serverless function handler"""
-    return app(request.environ, request.start_response)
-
-
-# This allows Vercel to import the app
+# Vercel expects this variable name to be exported
+# This is the WSGI application object that Vercel will serve
 application = app
