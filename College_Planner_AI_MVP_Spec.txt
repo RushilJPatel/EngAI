@@ -1,0 +1,76 @@
+🧠 MVP Specification: College Planner AI
+
+🎯 Objective
+Develop a Flask-based web application called College Planner AI that helps students plan their computer science degree efficiently. It allows users to:
+- Select their university (from a Top 20 U.S. CS college list).
+- Enter completed courses.
+- View recommended next courses based on prerequisites.
+- Receive AI-suggested electives based on interests (AI, cybersecurity, data science, etc.).
+The system uses lightweight logic but should be ready for future integration with GPT APIs.
+
+🧩 Core Functional Goals
+1. Select a college from dropdown of Top 20 CS universities.
+2. Display that college's full course load.
+3. Input completed courses and interests.
+4. Generate:
+   - Recommended next core courses based on prerequisites.
+   - AI elective suggestions based on interests.
+5. Render results in a simple and clean web interface.
+
+🧠 Logic Details
+- Uses JSON for data:
+  - courses.json for prerequisite mapping.
+  - college_curriculums.json for Top 20 college data.
+- User selects college → loads that school’s course list.
+- User submits completed courses → runs algorithm:
+  - Checks which prerequisites are met.
+  - Suggests next courses.
+- User provides interests → system matches keywords to AI electives.
+
+⚙️ Technical Stack
+- Backend: Flask (Python 3.10+)
+- Frontend: HTML + Jinja templates + CSS
+- Data: JSON (no database yet)
+
+🗂️ Directory Structure
+college-planner-ai/
+├── app.py
+├── planner.py
+├── courses.json
+├── college_curriculums.json
+├── templates/
+│   └── index.html
+└── static/
+    └── styles.css (optional)
+
+🧾 File Specifications
+
+1️⃣ app.py
+Handles Flask routing, data loading, and form processing.
+Renders index.html and returns course/elective recommendations.
+
+2️⃣ planner.py
+Contains:
+- suggest_next_courses(completed, all_courses)
+- suggest_ai_electives(interests)
+Implements basic logic for course recommendations and elective suggestions.
+
+3️⃣ courses.json
+Stores prerequisite structure for core courses.
+
+4️⃣ college_curriculums.json
+Contains full course loads for Top 20 CS colleges, each with 4–6 representative courses.
+
+5️⃣ templates/index.html
+Frontend UI for inputs (college, completed courses, interests) and output lists (course loads, recommendations, electives).
+
+🧰 Installation
+pip install flask
+python app.py
+Visit: http://127.0.0.1:5000
+
+🚀 Stretch Goals
+- GPT API integration for smarter electives
+- User accounts and saved progress
+- Graphical course progress visualization
+- Side-by-side college comparisons

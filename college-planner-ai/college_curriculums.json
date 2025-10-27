@@ -1,0 +1,174 @@
+{
+  "colleges": {
+    "MIT": {
+      "name": "Massachusetts Institute of Technology",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Computer Networks",
+        "Software Engineering"
+      ]
+    },
+    "Stanford": {
+      "name": "Stanford University",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Data Science",
+        "Web Development"
+      ]
+    },
+    "CMU": {
+      "name": "Carnegie Mellon University",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Computer Graphics",
+        "Distributed Systems"
+      ]
+    },
+    "UC Berkeley": {
+      "name": "University of California, Berkeley",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Data Science",
+        "Web Development"
+      ]
+    },
+    "Caltech": {
+      "name": "California Institute of Technology",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Computer Graphics",
+        "Cryptography"
+      ]
+    },
+    "Georgia Tech": {
+      "name": "Georgia Institute of Technology",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Computer Security",
+        "Computer Networks",
+        "Software Engineering",
+        "Mobile App Development"
+      ]
+    },
+    "UIUC": {
+      "name": "University of Illinois at Urbana-Champaign",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Computer Security",
+        "Computer Networks",
+        "Software Engineering",
+        "Web Development"
+      ]
+    },
+    "Cornell": {
+      "name": "Cornell University",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Computer Networks",
+        "Distributed Systems"
+      ]
+    },
+    "Princeton": {
+      "name": "Princeton University",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Artificial Intelligence",
+        "Computer Security",
+        "Computer Graphics",
+        "Cryptography"
+      ]
+    },
+    "UT Austin": {
+      "name": "University of Texas at Austin",
+      "courses": [
+        "Intro to Computer Science",
+        "Data Structures",
+        "Discrete Mathematics",
+        "Algorithms",
+        "Computer Architecture",
+        "Operating Systems",
+        "Database Systems",
+        "Machine Learning",
+        "Computer Security",
+        "Computer Networks",
+        "Software Engineering",
+        "Data Science"
+      ]
+    }
+  }
+}

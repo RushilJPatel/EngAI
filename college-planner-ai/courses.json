@@ -1,0 +1,144 @@
+{
+  "career_paths": {
+    "software engineer": ["Data Structures", "Algorithms", "Software Engineering", "Operating Systems", "Database Systems", "Web Development"],
+    "data scientist": ["Data Structures", "Linear Algebra", "Machine Learning", "Data Science", "Algorithms", "Database Systems"],
+    "AI researcher": ["Data Structures", "Linear Algebra", "Machine Learning", "Artificial Intelligence", "Natural Language Processing", "Algorithms"],
+    "security engineer": ["Data Structures", "Operating Systems", "Computer Security", "Cryptography", "Computer Networks", "Algorithms"],
+    "systems engineer": ["Data Structures", "Operating Systems", "Computer Architecture", "Computer Networks", "Distributed Systems", "Algorithms"],
+    "full-stack developer": ["Data Structures", "Software Engineering", "Web Development", "Database Systems", "Operating Systems", "Mobile App Development"]
+  },
+  "courses": {
+    "Intro to Computer Science": {
+      "prerequisites": [],
+      "level": "freshman",
+      "credits": 3,
+      "description": "Introduction to programming and computer science fundamentals"
+    },
+    "Data Structures": {
+      "prerequisites": ["Intro to Computer Science"],
+      "level": "sophomore",
+      "credits": 3,
+      "description": "Fundamental data structures and algorithms"
+    },
+    "Discrete Mathematics": {
+      "prerequisites": [],
+      "level": "freshman",
+      "credits": 3,
+      "description": "Mathematical foundations for computer science"
+    },
+    "Algorithms": {
+      "prerequisites": ["Data Structures", "Discrete Mathematics"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Algorithm design and analysis techniques"
+    },
+    "Computer Architecture": {
+      "prerequisites": ["Intro to Computer Science"],
+      "level": "sophomore",
+      "credits": 3,
+      "description": "Computer organization and architecture"
+    },
+    "Operating Systems": {
+      "prerequisites": ["Data Structures", "Computer Architecture"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Operating system concepts and implementation"
+    },
+    "Database Systems": {
+      "prerequisites": ["Data Structures"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Database design and management"
+    },
+    "Linear Algebra": {
+      "prerequisites": [],
+      "level": "sophomore",
+      "credits": 3,
+      "description": "Linear algebra and its applications"
+    },
+    "Machine Learning": {
+      "prerequisites": ["Data Structures", "Linear Algebra"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Introduction to machine learning algorithms",
+      "tags": ["AI", "data science"]
+    },
+    "Computer Networks": {
+      "prerequisites": ["Operating Systems"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Network protocols and distributed systems",
+      "tags": ["networking"]
+    },
+    "Software Engineering": {
+      "prerequisites": ["Data Structures"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Software development methodologies and practices",
+      "tags": ["web dev", "software"]
+    },
+    "Artificial Intelligence": {
+      "prerequisites": ["Algorithms"],
+      "level": "senior",
+      "credits": 3,
+      "description": "AI algorithms and applications",
+      "tags": ["AI"]
+    },
+    "Computer Security": {
+      "prerequisites": ["Operating Systems"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Cybersecurity principles and practices",
+      "tags": ["cybersecurity"]
+    },
+    "Data Science": {
+      "prerequisites": ["Data Structures", "Linear Algebra"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Data analysis and visualization",
+      "tags": ["data science"]
+    },
+    "Web Development": {
+      "prerequisites": ["Data Structures"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Modern web development technologies",
+      "tags": ["web dev"]
+    },
+    "Computer Graphics": {
+      "prerequisites": ["Linear Algebra", "Data Structures"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Computer graphics algorithms and techniques",
+      "tags": ["graphics"]
+    },
+    "Distributed Systems": {
+      "prerequisites": ["Operating Systems", "Computer Networks"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Distributed computing systems",
+      "tags": ["networking", "systems"]
+    },
+    "Mobile App Development": {
+      "prerequisites": ["Data Structures"],
+      "level": "junior",
+      "credits": 3,
+      "description": "Mobile application development",
+      "tags": ["web dev", "mobile"]
+    },
+    "Cryptography": {
+      "prerequisites": ["Discrete Mathematics"],
+      "level": "senior",
+      "credits": 3,
+      "description": "Cryptographic algorithms and security",
+      "tags": ["cybersecurity"]
+    },
+    "Natural Language Processing": {
+      "prerequisites": ["Algorithms", "Machine Learning"],
+      "level": "senior",
+      "credits": 3,
+      "description": "NLP algorithms and applications",
+      "tags": ["AI", "data science"]
+    }
+  }
+}

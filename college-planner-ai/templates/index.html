@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Planner AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 College Planner AI</h1>
+            <p>Plan your computer science degree efficiently</p>
+        </header>
+
+        <main>
+            <div class="form-section">
+                <h2>Step 1: Select Your College</h2>
+                <div class="form-group">
+                    <label for="college-select">Choose your university:</label>
+                    <select id="college-select" name="college">
+                        <option value="">Select a college...</option>
+                        {% for key, name in colleges %}
+                        <option value="{{ key }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section" id="career-section" style="display: none;">
+                <h2>Step 2: Select Your Career Path</h2>
+                <div class="form-group">
+                    <label for="career-select">Choose your career aspiration:</label>
+                    <select id="career-select" name="career">
+                        <option value="">Not specified (general planning)</option>
+                        {% for career in career_paths %}
+                        <option value="{{ career }}">{{ career|replace('_', ' ')|title }}</option>
+                        {% endfor %}
+                    </select>
+                    <small>This helps prioritize courses relevant to your career goals</small>
+                </div>
+            </div>
+
+            <div class="form-section" id="courses-section" style="display: none;">
+                <h2>Step 3: Mark Completed Courses</h2>
+                <div class="form-group">
+                    <label>Select courses you have already completed:</label>
+                    <div id="courses-checkboxes" class="checkbox-grid">
+                        <!-- Courses will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" id="interests-section" style="display: none;">
+                <h2>Step 4: Your Interests</h2>
+                <div class="form-group">
+                    <label for="interests-input">Enter your interests (comma-separated):</label>
+                    <input type="text" id="interests-input" placeholder="e.g., AI, cybersecurity, data science, web dev">
+                    <small>Examples: AI, cybersecurity, data science, web development, mobile, graphics, networking</small>
+                </div>
+            </div>
+
+            <div class="form-section" id="submit-section" style="display: none;">
+                <button id="get-recommendations" class="btn-primary">Get Course Recommendations</button>
+                <button id="generate-schedule" class="btn-secondary">Generate Full 4-Year Schedule</button>
+            </div>
+
+            <div class="results-section" id="results-section" style="display: none;">
+                <h2>Your Personalized Recommendations</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>📚 Next Core Courses</h3>
+                        <div id="next-courses-list">
+                            <!-- Recommendations will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h3>🎯 Suggested Electives</h3>
+                        <div id="electives-list">
+                            <!-- Elective suggestions will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section" id="schedule-section" style="display: none;">
+                <h2>Your Complete Degree Schedule</h2>
+                <div id="schedule-display">
+                    <!-- Semester schedule will be loaded here -->
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built with ❤️ for CS students</p>
+        </footer>
+    </div>
+
+    <script>
+        let selectedCollege = '';
+        let availableCourses = [];
+
+        // College selection handler
+        document.getElementById('college-select').addEventListener('change', function() {
+            selectedCollege = this.value;
+            if (selectedCollege) {
+                loadCollegeCourses(selectedCollege);
+                document.getElementById('career-section').style.display = 'block';
+                document.getElementById('courses-section').style.display = 'block';
+            } else {
+                document.getElementById('career-section').style.display = 'none';
+                document.getElementById('courses-section').style.display = 'none';
+                document.getElementById('interests-section').style.display = 'none';
+                document.getElementById('submit-section').style.display = 'none';
+                document.getElementById('results-section').style.display = 'none';
+            }
+        });
+
+        // Load courses for selected college
+        function loadCollegeCourses(collegeKey) {
+            fetch('/get_courses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ college: collegeKey })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.courses) {
+                    availableCourses = data.courses;
+                    displayCourseCheckboxes(data.courses);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading courses:', error);
+                alert('Error loading courses. Please try again.');
+            });
+        }
+
+        // Display course checkboxes
+        function displayCourseCheckboxes(courses) {
+            const container = document.getElementById('courses-checkboxes');
+            container.innerHTML = '';
+            
+            courses.forEach(course => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'checkbox-item';
+                checkboxDiv.innerHTML = `
+                    <input type="checkbox" id="course-${course}" value="${course}" name="completed_courses">
+                    <label for="course-${course}">${course}</label>
+                `;
+                container.appendChild(checkboxDiv);
+            });
+        }
+
+        // Get recommendations
+        document.getElementById('get-recommendations').addEventListener('click', function() {
+            const completedCourses = Array.from(document.querySelectorAll('input[name="completed_courses"]:checked'))
+                .map(cb => cb.value);
+            const interests = document.getElementById('interests-input').value.trim();
+
+            if (completedCourses.length === 0 && !interests) {
+                alert('Please select at least one completed course or enter your interests.');
+                return;
+            }
+
+            fetch('/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    college: selectedCollege,
+                    completed_courses: completedCourses,
+                    interests: interests
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    displayRecommendations(data);
+                }
+            })
+            .catch(error => {
+                console.error('Error getting recommendations:', error);
+                alert('Error getting recommendations. Please try again.');
+            });
+        });
+
+        // Generate full schedule
+        document.getElementById('generate-schedule').addEventListener('click', function() {
+            const completedCourses = Array.from(document.querySelectorAll('input[name="completed_courses"]:checked'))
+                .map(cb => cb.value);
+            const interests = document.getElementById('interests-input').value.trim();
+            const careerPath = document.getElementById('career-select').value;
+
+            fetch('/generate_schedule', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    college: selectedCollege,
+                    completed_courses: completedCourses,
+                    career_path: careerPath,
+                    interests: interests,
+                    semesters: 8
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    displaySchedule(data);
+                }
+            })
+            .catch(error => {
+                console.error('Error generating schedule:', error);
+                alert('Error generating schedule. Please try again.');
+            });
+        });
+
+        // Display recommendations
+        function displayRecommendations(data) {
+            // Display next courses
+            const nextCoursesContainer = document.getElementById('next-courses-list');
+            if (data.next_courses && data.next_courses.length > 0) {
+                nextCoursesContainer.innerHTML = data.next_courses.map(course => `
+                    <div class="course-item">
+                        <h4>${course.name}</h4>
+                        <p class="course-level">${course.level.charAt(0).toUpperCase() + course.level.slice(1)} Level • ${course.credits} credits</p>
+                        <p class="course-description">${course.description}</p>
+                        ${course.prerequisites.length > 0 ? `<p class="prerequisites">Prerequisites: ${course.prerequisites.join(', ')}</p>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                nextCoursesContainer.innerHTML = '<p class="no-results">No courses available based on your completed courses.</p>';
+            }
+
+            // Display elective suggestions
+            const electivesContainer = document.getElementById('electives-list');
+            if (data.elective_suggestions && data.elective_suggestions.length > 0) {
+                electivesContainer.innerHTML = data.elective_suggestions.map(elective => `
+                    <div class="course-item">
+                        <h4>${elective.name}</h4>
+                        <p class="course-level">${elective.level.charAt(0).toUpperCase() + elective.level.slice(1)} Level • ${elective.credits} credits</p>
+                        <p class="course-description">${elective.description}</p>
+                        <p class="match-reasons">Why recommended: ${elective.matches.join(', ')}</p>
+                    </div>
+                `).join('');
+            } else {
+                electivesContainer.innerHTML = '<p class="no-results">No elective suggestions based on your interests.</p>';
+            }
+
+            document.getElementById('results-section').style.display = 'block';
+        }
+
+        // Display schedule
+        function displaySchedule(data) {
+            const scheduleContainer = document.getElementById('schedule-display');
+            
+            if (data.schedule && data.schedule.length > 0) {
+                let html = `<div class="schedule-header">
+                    <h3>${data.college_name}</h3>
+                    ${data.career_path ? `<p class="career-path">Career Focus: <strong>${data.career_path.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong></p>` : ''}
+                </div>`;
+                
+                html += '<div class="semesters-container">';
+                
+                data.schedule.forEach(semester => {
+                    const workload = semester.workload_analysis || {};
+                    const aiGuidance = semester.ai_guidance || '';
+                    
+                    html += `
+                        <div class="semester-card">
+                            <div class="semester-header">
+                                <h4>Year ${semester.year} - ${semester.term} Semester (Semester ${semester.semester})</h4>
+                                <span class="credit-badge">${semester.total_credits} Credits</span>
+                            </div>
+                            
+                            ${workload.difficulty_rating ? `
+                                <div class="workload-analysis">
+                                    <div class="difficulty-display">
+                                        <span class="difficulty-label">Difficulty:</span>
+                                        <div class="difficulty-stars">
+                                            ${'⭐'.repeat(workload.difficulty_rating)}${'☆'.repeat(10 - workload.difficulty_rating)}
+                                        </div>
+                                        <span class="difficulty-score">${workload.difficulty_rating}/10</span>
+                                    </div>
+                                    <div class="workload-info">
+                                        <p><strong>Time Commitment:</strong> ${workload.weekly_hours}</p>
+                                        ${workload.challenges ? `<p><strong>Challenges:</strong> ${workload.challenges}</p>` : ''}
+                                        ${workload.tips ? `<p><strong>Tips:</strong> ${workload.tips}</p>` : ''}
+                                        ${workload.balance_analysis ? `<p><strong>Balance:</strong> ${workload.balance_analysis}</p>` : ''}
+                                    </div>
+                                    ${aiGuidance ? `<div class="ai-guidance"><strong>AI Recommendation:</strong> ${aiGuidance}</div>` : ''}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="semester-courses">
+                                ${semester.courses.map(course => `
+                                    <div class="semester-course ${course.career_relevant ? 'career-relevant' : ''}">
+                                        <h5>${course.name} <span class="course-credits">(${course.credits} credits)</span></h5>
+                                        ${course.career_relevant ? '<span class="career-badge">Career Focus</span>' : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                scheduleContainer.innerHTML = html;
+                document.getElementById('schedule-section').style.display = 'block';
+            } else {
+                scheduleContainer.innerHTML = '<p class="no-results">Unable to generate schedule. Please check your inputs.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
