@@ -143,5 +143,9 @@ def course_info(course_name):
         return jsonify({'error': str(e)}), 500
 
 
+# For Vercel deployment, don't run the development server
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
+
+# This allows Vercel to import the app
+application = app
