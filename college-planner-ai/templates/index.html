@@ -113,6 +113,7 @@
                 document.getElementById('interests-section').style.display = 'none';
                 document.getElementById('submit-section').style.display = 'none';
                 document.getElementById('results-section').style.display = 'none';
+                document.getElementById('schedule-section').style.display = 'none';
             }
         });
 
@@ -130,6 +131,9 @@
                 if (data.courses) {
                     availableCourses = data.courses;
                     displayCourseCheckboxes(data.courses);
+                    // Show interests and submit sections
+                    document.getElementById('interests-section').style.display = 'block';
+                    document.getElementById('submit-section').style.display = 'block';
                 }
             })
             .catch(error => {
@@ -226,6 +230,9 @@
 
         // Display recommendations
         function displayRecommendations(data) {
+            // Hide schedule section if it was visible
+            document.getElementById('schedule-section').style.display = 'none';
+            
             // Display next courses
             const nextCoursesContainer = document.getElementById('next-courses-list');
             if (data.next_courses && data.next_courses.length > 0) {
@@ -261,6 +268,9 @@
 
         // Display schedule
         function displaySchedule(data) {
+            // Hide results section if it was visible
+            document.getElementById('results-section').style.display = 'none';
+            
             const scheduleContainer = document.getElementById('schedule-display');
             
             if (data.schedule && data.schedule.length > 0) {

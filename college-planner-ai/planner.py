@@ -258,7 +258,7 @@ def analyze_workload(semester_courses: List[str]) -> Dict:
     try:
         # Configure Gemini API
         genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         courses_data = load_courses()['courses']
         course_descriptions = []
@@ -361,7 +361,7 @@ def get_ai_schedule_guidance(current_semester: Dict, completed: List[str], caree
     try:
         # Configure Gemini API
         genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         courses_data = load_courses()['courses']
         semester_courses = [c['name'] for c in current_semester['courses']]
