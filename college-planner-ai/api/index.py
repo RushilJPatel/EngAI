@@ -157,6 +157,13 @@ def course_info(course_name):
         return jsonify({'error': str(e)}), 500
 
 
+# Lightweight health endpoint for Vercel / debugging
+@app.route('/_health', methods=['GET'])
+def _health():
+    """Simple health check returning 200 so we can verify the function is reachable."""
+    return jsonify({'status': 'ok'}), 200
+
+
 # Vercel expects this variable name to be exported
 # This is the WSGI application object that Vercel will serve
 application = app
