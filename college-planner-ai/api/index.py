@@ -49,17 +49,24 @@ def load_colleges():
 
 @app.route('/', methods=['GET'])
 def index():
-    """Render the main page with college dropdown"""
+    """Optional server-rendered index for environments that use Flask to serve the site.
+    When deployed with static hosting + serverless APIs, the static `static/index.html`
+    will be served instead.
+    """
     if startup_error:
         # Application reachable but backend failed to start properly
         return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     colleges_data = load_colleges()
     colleges = [(key, colleges_data['colleges'][key]['name']) for key in colleges_data['colleges'].keys()]
     career_paths = get_career_paths()
-    return render_template('index.html', colleges=colleges, career_paths=list(career_paths.keys()))
+    try:
+        return render_template('index.html', colleges=colleges, career_paths=list(career_paths.keys()))
+    except Exception:
+        # If templates are not desired (static-first deployment), return a short message
+        return jsonify({'status': 'ok', 'message': 'Flask app running. Use static/index.html for the frontend.'})
 
 
-@app.route('/get_courses', methods=['POST'])
+@app.route('/api/get_courses', methods=['POST'])
 def get_courses():
     """Return course list for selected college"""
     if startup_error:
@@ -74,7 +81,7 @@ def get_courses():
         return jsonify({'error': 'College not found'}), 400
 
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/api/recommend', methods=['POST'])
 def recommend():
     """Process completed courses and interests, return recommendations"""
     if startup_error:
@@ -112,7 +119,7 @@ def recommend():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/generate_schedule', methods=['POST'])
+@app.route('/api/generate_schedule', methods=['POST'])
 def generate_schedule():
     """Generate a semester-by-semester schedule"""
     if startup_error:
@@ -175,7 +182,7 @@ def generate_schedule():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/course_info/<course_name>')
+@app.route('/api/course_info/<course_name>')
 def course_info(course_name):
     """Get detailed information about a specific course"""
     if startup_error:
@@ -190,11 +197,24 @@ def course_info(course_name):
         return jsonify({'error': str(e)}), 500
 
 
-# Lightweight health endpoint for Vercel / debugging
-@app.route('/_health', methods=['GET'])
+# Lightweight health endpoint for Vercel / debugging (under /api/ so routing works with /api/*)
+@app.route('/api/_health', methods=['GET'])
 def _health():
     """Simple health check returning 200 so we can verify the function is reachable."""
     return jsonify({'status': 'ok'}), 200
+
+
+# Endpoint to list colleges + career paths for static frontend initialization
+@app.route('/api/colleges', methods=['GET'])
+def api_colleges():
+    try:
+        colleges_data = load_colleges()
+        career_paths = get_career_paths()
+        # Return a simplified mapping of college_key -> name
+        colleges_simple = {k: v['name'] for k, v in colleges_data['colleges'].items()}
+        return jsonify({'colleges': colleges_simple, 'career_paths': list(career_paths.keys())})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 # Vercel expects this variable name to be exported
