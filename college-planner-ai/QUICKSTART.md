@@ -156,6 +156,18 @@ For enhanced AI-powered workload analysis and guidance:
 - Check if `.env` file exists with your Gemini API key
 - API key is optional - app works without it
 
+## ✅ Vercel deployment notes
+
+- Ensure the Vercel project "Root Directory" (in Project Settings → General) is set to `college-planner-ai` if you deploy from the repository root. If you deploy from inside the `college-planner-ai` folder, make sure `vercel.json` is present in that folder.
+- The project exposes API routes under `/api/*`. For a quick reachability check after deployment, request `GET /_health`:
+
+```powershell
+Invoke-WebRequest -UseBasicParsing 'https://<your-deployment>.vercel.app/_health'
+```
+
+You should see JSON: `{"status":"ok"}` when the function is reachable.
+
+If root (`/`) still 404s after the health check returns 200, the function is reachable but your Flask app may be failing while rendering the root template; inspect runtime logs in the Vercel dashboard (Deployments → select latest → Logs).
 ## 🎉 You're All Set!
 
 Open your browser and start planning your computer science degree!

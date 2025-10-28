@@ -5,13 +5,35 @@ This file needs to be in the api/ directory for Vercel to recognize it
 import json
 import os
 import sys
+import traceback
+import logging
 
 # Add parent directory to path so we can import planner
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 
 from flask import Flask, render_template, request, jsonify
-from planner import suggest_next_courses, suggest_ai_electives, get_course_info, generate_semester_schedule, get_career_paths, analyze_workload, get_ai_schedule_guidance
+
+# Setup basic logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Try importing project-specific modules but don't let import errors crash the function at import-time.
+startup_error = None
+try:
+    from planner import (
+        suggest_next_courses,
+        suggest_ai_electives,
+        get_course_info,
+        generate_semester_schedule,
+        get_career_paths,
+        analyze_workload,
+        get_ai_schedule_guidance,
+    )
+    logger.info("Imported planner module successfully")
+except Exception:
+    startup_error = traceback.format_exc()
+    logger.exception("Failed to import planner or dependencies at startup")
 
 # Create Flask app with correct paths
 app = Flask(__name__, 
@@ -28,6 +50,9 @@ def load_colleges():
 @app.route('/', methods=['GET'])
 def index():
     """Render the main page with college dropdown"""
+    if startup_error:
+        # Application reachable but backend failed to start properly
+        return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     colleges_data = load_colleges()
     colleges = [(key, colleges_data['colleges'][key]['name']) for key in colleges_data['colleges'].keys()]
     career_paths = get_career_paths()
@@ -37,6 +62,8 @@ def index():
 @app.route('/get_courses', methods=['POST'])
 def get_courses():
     """Return course list for selected college"""
+    if startup_error:
+        return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     college_key = request.json.get('college')
     colleges_data = load_colleges()
     
@@ -50,6 +77,8 @@ def get_courses():
 @app.route('/recommend', methods=['POST'])
 def recommend():
     """Process completed courses and interests, return recommendations"""
+    if startup_error:
+        return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     try:
         data = request.json
         college_key = data.get('college')
@@ -86,6 +115,8 @@ def recommend():
 @app.route('/generate_schedule', methods=['POST'])
 def generate_schedule():
     """Generate a semester-by-semester schedule"""
+    if startup_error:
+        return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     try:
         data = request.json
         college_key = data.get('college')
@@ -147,6 +178,8 @@ def generate_schedule():
 @app.route('/course_info/<course_name>')
 def course_info(course_name):
     """Get detailed information about a specific course"""
+    if startup_error:
+        return jsonify({'error': 'startup_error', 'details': startup_error}), 500
     try:
         info = get_course_info(course_name)
         if info:
