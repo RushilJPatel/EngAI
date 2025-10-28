@@ -13,6 +13,10 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, parent_dir)
 
 from flask import Flask, render_template, request, jsonify
+try:
+    from flask_cors import CORS
+except Exception:
+    CORS = None
 
 # Setup basic logging
 logging.basicConfig(level=logging.INFO)
@@ -39,6 +43,18 @@ except Exception:
 app = Flask(__name__, 
            template_folder=os.path.join(parent_dir, 'templates'),
            static_folder=os.path.join(parent_dir, 'static'))
+
+# Enable CORS for the API so a static site (served from Live Server) can call it
+if CORS is not None:
+    CORS(app)
+else:
+    # If flask_cors isn't installed, set CORS headers in responses as a fallback
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,POST,OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
 
 def load_colleges():
     """Load college data from college_curriculums.json"""
